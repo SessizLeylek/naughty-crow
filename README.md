@@ -1,2 +1,2 @@
-# naughty-crow
+# Naughty Crow
  A short game made with Odin and Raylib in 48 hours
