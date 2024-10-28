@@ -121,12 +121,15 @@ reset_game_data :: proc()
 
 main :: proc()
 {
-    rl.SetConfigFlags({.FULLSCREEN_MODE, .MSAA_4X_HINT, .VSYNC_HINT})
-    rl.InitWindow(1920, 1080, "ITU JAM GAME")
+    rl.SetConfigFlags({.MSAA_4X_HINT, .VSYNC_HINT})   
+    rl.InitWindow(16, 9, "ITU JAM GAME")
     rl.InitAudioDevice()
-    
-    monitor_height = rl.GetMonitorHeight(0)
-    monitor_width = rl.GetMonitorWidth(0)
+ 
+    monitor_height = rl.GetMonitorHeight(rl.GetCurrentMonitor())
+    monitor_width = rl.GetMonitorWidth(rl.GetCurrentMonitor())
+
+    rl.SetWindowSize(monitor_width, monitor_height)
+    rl.ToggleFullscreen()
 
     particle_texture := rl.LoadTexture("res/p.png")
     mainmenu_art := rl.LoadTexture("res/art.png")
@@ -219,14 +222,18 @@ main :: proc()
 
         rl.DrawText("NAUGHTY CROW", (monitor_width - 1312) >> 1, 160, 160, {25, 25, 75, 255})
         rl.DrawText("Press Space To Begin", (monitor_width - 912) >> 1, monitor_height - 160, 80, rl.WHITE)
+        rl.DrawText("Made by SessizLeylek", (monitor_width - 444) >> 1, 300, 40, {25, 25, 75, 255})
 
         rl.EndDrawing()
     }
 
-    is_game_active := true
-    game_over_time : f64
-    reset_game_data()
-    rl.PlaySound(music)
+    is_game_active : bool
+    if(!rl.WindowShouldClose())
+    {
+        is_game_active = true
+        reset_game_data()
+        rl.PlaySound(music)
+    }
 
     // IN GAME
     for !rl.WindowShouldClose()
@@ -571,7 +578,7 @@ main :: proc()
         {
             rl.DrawText("YOU DIED", (monitor_width - 784) >> 1, 160, 160, rl.BLACK)
             rl.DrawText(rl.TextFormat("At the Age of %i", year), (monitor_width - 640) >> 1, 320, 80, rl.BLACK)
-            rl.DrawText("Press R to Restart", (monitor_width - 808) >> 1, 920, 80, rl.BLACK)
+            rl.DrawText("Press R to Restart", (monitor_width - 808) >> 1, monitor_height - 160, 80, rl.BLACK)
         }
 
         rl.EndDrawing()
