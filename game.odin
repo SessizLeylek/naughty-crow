@@ -9,6 +9,9 @@ import "core:fmt"
 
 camera : rl.Camera
 
+monitor_height : i32
+monitor_width : i32
+
 // seasons
 game_time : f32 = 0
 year : i32 = 1
@@ -121,6 +124,9 @@ main :: proc()
     rl.SetConfigFlags({.FULLSCREEN_MODE, .MSAA_4X_HINT, .VSYNC_HINT})
     rl.InitWindow(1920, 1080, "ITU JAM GAME")
     rl.InitAudioDevice()
+    
+    monitor_height = rl.GetMonitorHeight(0)
+    monitor_width = rl.GetMonitorWidth(0)
 
     particle_texture := rl.LoadTexture("res/p.png")
     mainmenu_art := rl.LoadTexture("res/art.png")
@@ -209,10 +215,10 @@ main :: proc()
     {
         rl.BeginDrawing()
 
-        rl.DrawTexture(mainmenu_art, 0, 0, rl.WHITE)
+        rl.DrawTextureEx(mainmenu_art, 0, 0, (f32(monitor_height) * f32(0.000926)), rl.WHITE)
 
-        rl.DrawText("NAUGHTY CROW", 304, 160, 160, {25, 25, 75, 255})
-        rl.DrawText("Press Space To Begin", 504, 920, 80, rl.WHITE)
+        rl.DrawText("NAUGHTY CROW", (monitor_width - 1312) >> 1, 160, 160, {25, 25, 75, 255})
+        rl.DrawText("Press Space To Begin", (monitor_width - 912) >> 1, monitor_height - 160, 80, rl.WHITE)
 
         rl.EndDrawing()
     }
@@ -545,27 +551,27 @@ main :: proc()
         {
             for i in 0..<i32(135 - abs(game_time - 51) * 15)
             {
-                rl.DrawRectangle(rnd.int31_max(1910), rnd.int31_max(1070), 10, 10, {255, 255, 255, 200})
+                rl.DrawRectangle(rnd.int31_max(monitor_width - 10), rnd.int31_max(monitor_height - 10), 10, 10, {255, 255, 255, 200})
             }
         }
         
-        rl.DrawFPS(0, 0)
+        //rl.DrawFPS(0, 0)
         if(is_game_active)
         {
             // saturation bar
-            rl.DrawRectangle(580, 900, 760, 100, rl.DARKGRAY)
-            rl.DrawRectangle(600, 920, 720, 60, rl.ORANGE)
-            rl.DrawRectangle(600, 920, i32(7.2 * player_saturation), 60, rl.YELLOW)
+            rl.DrawRectangle((monitor_width - 760) >> 1, monitor_height - 180, 760, 100, rl.DARKGRAY)
+            rl.DrawRectangle((monitor_width - 720) >> 1, monitor_height - 160, 720, 60, rl.ORANGE)
+            rl.DrawRectangle((monitor_width - 720) >> 1, monitor_height - 160, i32(7.2 * player_saturation), 60, rl.YELLOW)
             
             // year texts
-            if(game_time < 5) do rl.DrawText(rl.TextFormat("%i SPRING", 2023 + year), 645, 129, 96, {255, 255, 255, u8(255 - 51 * game_time)})
-            else if (game_time > 43 && game_time < 48) do rl.DrawText(rl.TextFormat("%i WINTER", 2023 + year), 661, 129, 96, {0, 0, 0, u8(255 - 51 * (game_time - 43))})
+            if(game_time < 5) do rl.DrawText(rl.TextFormat("%i SPRING", 2023 + year), (monitor_width - 630) >> 1, 129, 96, {255, 255, 255, u8(255 - 51 * game_time)})
+            else if (game_time > 43 && game_time < 48) do rl.DrawText(rl.TextFormat("%i WINTER", 2023 + year), (monitor_width - 598) >> 1, 129, 96, {0, 0, 0, u8(255 - 51 * (game_time - 43))})
         }
         else
         {
-            rl.DrawText("YOU DIED", 568, 160, 160, rl.BLACK)
-            rl.DrawText(rl.TextFormat("At the Age of %i", year), 640, 320, 80, rl.BLACK)
-            rl.DrawText("Press R to Restart", 556, 920, 80, rl.BLACK)
+            rl.DrawText("YOU DIED", (monitor_width - 784) >> 1, 160, 160, rl.BLACK)
+            rl.DrawText(rl.TextFormat("At the Age of %i", year), (monitor_width - 640) >> 1, 320, 80, rl.BLACK)
+            rl.DrawText("Press R to Restart", (monitor_width - 808) >> 1, 920, 80, rl.BLACK)
         }
 
         rl.EndDrawing()

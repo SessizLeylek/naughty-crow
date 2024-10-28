@@ -6,7 +6,7 @@
         {
             "label": "BUILD AND RUN",
             "type": "shell",
-            "command": "odin run game.odin -file",
+            "command": "odin run . -subsystem:windows",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
